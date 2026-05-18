@@ -1,105 +1,166 @@
 """
-A school wants to develop a simple attendance tracking system using Python. The system should store student names in a text file and allow the teacher to mark attendance daily. Each day’s attendance should be recorded in the same file without deleting previous records. The program should also be able to read the file and display how many times each student has been marked present.
+A school wants to develop a simple attendance tracking system using Python.
+The system should store student names in a text file and allow the teacher
+to mark attendance daily.
 
-Design a Python program that uses file handling to implement this system. Your solution should also ensure that the file is created automatically if it does not exist and that data is safely appended without overwriting previous records.
+Each day’s attendance should be recorded in the same file without deleting
+previous records.
+
+The program should also be able to read the file and display how many times
+each student has been marked present.
+
+This solution uses:
+- File handling
+- Functions
+- Dictionaries
+- Append mode
+- Automatic file creation
 """
 
+# import os module for checking if file exists
 import os
+
+# import datetime module for recording current date
 from datetime import datetime
 
-# file to store the students records
-STUDENT_RECORDS = 'attendance.txt'
 
-# ensure that file which will used to store the student records exits
+# file used to store attendance records
+STUDENT_RECORDS = "attendance.txt"
+
+
+# function to create the file if it does not exist
 def initialize_file():
+
+    # check whether the attendance file exists
     if not os.path.exists(STUDENT_RECORDS):
-        with open(STUDENT_RECORDS, 'w') as file:
+
+        # create an empty attendance file
+        with open(STUDENT_RECORDS, "w") as file:
             pass
 
-# mark the attendance
+
+# function for marking attendance
 def mark_attendance():
-    # call the function that checks if the file exits
+
+    # ensure the attendance file exists
     initialize_file()
 
-    # record the date of the attendance
+    # get today's date
     date = datetime.now().strftime("%Y-%m-%d")
 
-    print('\n--- MARK ATTENDANCE ---')
+    print("\n--- MARK ATTENDANCE ---")
 
-    # STORE THE STUDENT NAME
-    student_name = input("Enter your name separating by commas: ").split(",")
+    # allow user to enter many names separated by commas
+    student_names = input(
+        "Enter student names separated by commas: "
+    ).split(",")
 
-    # open the file and store the student name
-    with open(STUDENT_RECORDS, 'a') as file:
-        for student in student_name:
-            # create a variable to stored the formatted student name
+    # open the file in append mode
+    # append mode prevents overwriting previous records
+    with open(STUDENT_RECORDS, "a") as file:
+
+        # loop through all entered student names
+        for student in student_names:
+
+            # remove extra spaces from student name
             name = student.strip()
 
+            # ensure empty names are not saved
             if name:
-                file.write(f"{date}, {name} present\n")
-    
-    # print the success message
-    print("Student added successfully!")
+
+                # save attendance record in file
+                # format: date,name,status
+                file.write(f"{date},{name},present\n")
+
+    # display success message
+    print("Attendance recorded successfully!")
 
 
-# function to display the records per student
+# function for viewing attendance summary
 def view_attendance():
-    # check if the attendance file exist with your system
+
+    # ensure the file exists before reading
     initialize_file()
 
-    # create dictionary to display the student record
-    attendance_data = {} # empty dictionary
+    # dictionary used to count attendance
+    attendance_data = {}
 
-    # open the file that we want to read from 
+    # open attendance file in read mode
     with open(STUDENT_RECORDS, "r") as file:
-        for line in file:
-            # create a variable to hold the parts of each line in the file
-            parts = line.strip().split(",")
 
-            # check the length of parts
+        # read each line from the file
+        for line in file:
+
+            # remove unnecessary spaces/newlines
+            line = line.strip()
+
+            # skip empty lines
+            if line == "":
+                continue
+
+            # split line into parts using comma
+            parts = line.split(",")
+
+            # check if line has correct format
             if len(parts) == 3:
+
+                # unpack the data
                 date, name, status = parts
 
-                # check on how the status is stord
-                if status.lower() == 'present':
-                    # add the student record to the dictionary
-                    attendance_data[name] = attendance_data.get(name, 0) + 1
+                # check if student was marked present
+                if status.lower() == "present":
 
-    # print the summary of the records
-    print("\n ---Attendance summary---")
-    # check if any records exist in the attendance data
+                    # count attendance for each student
+                    attendance_data[name] = (
+                        attendance_data.get(name, 0) + 1
+                    )
+
+    # display attendance summary
+    print("\n--- ATTENDANCE SUMMARY ---")
+
+    # check whether records exist
     if not attendance_data:
-        print("No records were found the attendance history")
+
+        print("No attendance records found.")
+
     else:
-        # print the students records
+
+        # display each student and attendance count
         for student, count in attendance_data.items():
             print(f"{student} : {count} times present")
 
 
-
-# menu for our system
+# main menu function
 def menu():
+
+    # keep program running until user exits
     while True:
+
         print("\n===== SCHOOL ATTENDANCE SYSTEM =====")
         print("1. Mark Attendance")
         print("2. View Attendance")
         print("3. Exit")
 
-
-        # let the user enter their choice
+        # get user's menu choice
         user_choice = input("Enter your choice: ")
 
+        # option for marking attendance
         if user_choice == "1":
             mark_attendance()
+
+        # option for viewing attendance summary
         elif user_choice == "2":
             view_attendance()
+
+        # option for exiting the system
         elif user_choice == "3":
             print("Bye!")
             break
+
+        # handle invalid inputs
         else:
-            print("Invalid input! Try again")
+            print("Invalid input! Try again.")
 
 
-
-# call the menu function to start your program
+# start the attendance system
 menu()
