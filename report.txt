@@ -1,0 +1,4 @@
+Summary of the Scores
+Average is 63.33
+Student with Highest score: name: juliet, marks: 94
+Student with lowest score name: joseph, marks: 18

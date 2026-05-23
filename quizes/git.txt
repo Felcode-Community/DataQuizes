@@ -1,0 +1,18 @@
+git init - create a git folder
+git add . - adds the files in the folder created git above
+
+
+CONFIGURE GIT USERNAME
+git config user.name "yourGitHubUsername"
+git config user.gmail "emailAddressUsedToCreateGithub"
+
+CONFIGURE REMOTE LOCATION
+git remote .... this is taken after creating repository in the github
+
+
+Now the save the files in te git
+git commit -m "message to save"
+
+specify the branch where this git folder content will stored
+git branch -M main
+
